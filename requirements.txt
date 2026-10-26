@@ -1,0 +1,7 @@
+pip install -r requirements.txtstreamlit
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+joblib
