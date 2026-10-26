@@ -15,10 +15,12 @@ st.set_page_config(
 
 BASE_DIR = Path(__file__).resolve().parent
 
+
 # ---------------- CUSTOM CSS ----------------
 
 st.markdown("""
 <style>
+
 .stApp {
     background: #0b1120;
     color: #f1f5f9;
@@ -28,38 +30,47 @@ st.markdown("""
     background: #111c31;
 }
 
-.main-title {
-    font-size: 42px;
-    font-weight: 800;
-    color: #ffffff;
-}
-
-.subtitle {
-    color: #9caec5;
-    font-size: 16px;
-}
-
 .hero {
     background: linear-gradient(120deg, #142c50, #174a82);
-    padding: 30px;
+    padding: 35px;
     border-radius: 18px;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
     border: 1px solid #28558a;
 }
 
-.section-title {
-    font-size: 23px;
-    font-weight: 700;
-    color: #ffffff;
-    margin-top: 20px;
+.main-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: white;
+}
+
+.subtitle {
+    color: #c1d4ec;
+    font-size: 16px;
+    margin-top: 12px;
 }
 
 .info-card {
     background: #142238;
-    padding: 20px;
-    border-radius: 14px;
+    padding: 24px;
+    border-radius: 15px;
     border: 1px solid #263c59;
-    min-height: 110px;
+    min-height: 220px;
+}
+
+.info-card h2 {
+    font-size: 35px;
+}
+
+.info-card h3 {
+    color: white;
+    font-size: 23px;
+}
+
+.info-card p {
+    color: #e2e8f0;
+    font-size: 16px;
+    line-height: 1.6;
 }
 
 .result-card {
@@ -77,17 +88,18 @@ st.markdown("""
     color: #65e6c4;
 }
 
-.stButton > button {
+.stButton > button,
+.stFormSubmitButton > button {
     background: #1685e5;
     color: white;
     border: none;
     border-radius: 10px;
-    padding: 12px 25px;
+    padding: 12px 20px;
     font-weight: bold;
-    width: 100%;
 }
 
-.stButton > button:hover {
+.stButton > button:hover,
+.stFormSubmitButton > button:hover {
     background: #0868bd;
     color: white;
 }
@@ -98,11 +110,12 @@ div[data-testid="stMetric"] {
     border-radius: 12px;
     border: 1px solid #263c59;
 }
+
 </style>
 """, unsafe_allow_html=True)
 
 
-# ---------------- LOAD FILES ----------------
+# ---------------- LOAD MODEL AND DATA ----------------
 
 @st.cache_resource
 def load_model():
@@ -111,14 +124,17 @@ def load_model():
 
 @st.cache_data
 def load_data():
+
     with open(BASE_DIR / "model_features.json", "r") as file:
         features = json.load(file)
 
     df = pd.read_csv(BASE_DIR / "laptops_cleaned.csv")
+
     return df, features
 
 
 try:
+
     model = load_model()
     df, features = load_data()
 
@@ -126,8 +142,9 @@ try:
         model_name = file.read().strip()
 
 except Exception as e:
+
     st.error("Unable to load the project files.")
-    st.write("Check that all model and dataset files are in the same folder as app.py.")
+    st.write("Check that all required files are present beside app.py.")
     st.code(str(e))
     st.stop()
 
@@ -135,13 +152,20 @@ except Exception as e:
 # ---------------- SIDEBAR ----------------
 
 with st.sidebar:
+
     st.markdown("## 💻 LaptopPredict")
     st.caption("Machine Learning Price Estimator")
+
     st.divider()
 
     page = st.radio(
         "NAVIGATION",
-        ["🏠 Home", "💰 Price Prediction", "📊 Dataset Overview", "ℹ️ About Project"]
+        [
+            "🏠 Home",
+            "💰 Price Prediction",
+            "📊 Dataset Overview",
+            "ℹ️ About Project"
+        ]
     )
 
     st.divider()
@@ -156,68 +180,62 @@ with st.sidebar:
 
 if page == "🏠 Home":
 
-    st.markdown("""
+    st.html("""
     <div class="hero">
-        <div class="main-title">Find the Right Laptop Price</div>
+        <div class="main-title">
+            Find the Right Laptop Price
+        </div>
+
         <p class="subtitle">
-        Smart laptop price estimation using Machine Learning.
-        Enter laptop specifications and get an estimated price instantly.
+            Smart laptop price estimation using Machine Learning.
+            Enter laptop specifications and get an estimated price instantly.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
     c1, c2, c3 = st.columns(3)
 
     with c1:
-        st.markdown("""
+        st.html("""
         <div class="info-card">
-        <h2>⚡</h2>
-        <h3>Fast Prediction</h3>
-        <p>Get an estimated laptop price in seconds.</p>
+            <h2>⚡</h2>
+            <h3>Fast Prediction</h3>
+            <p>
+                Get an estimated laptop price in seconds.
+            </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with c2:
-        st.markdown("""
+        st.html("""
         <div class="info-card">
-        <h2>🎯</h2>
-        <h3>ML Powered</h3>
-        <p>Predictions using your trained regression model.</p>
+            <h2>🎯</h2>
+            <h3>ML Powered</h3>
+            <p>
+                Predictions using your trained regression model.
+            </p>
         </div>
-        """, unsafe_allow_html=True)
+        """)
 
     with c3:
-        st.markdown("""
+        st.html("""
         <div class="info-card">
-        <h2>💻</h2>
-        <h3>Custom Specifications</h3>
-        <p>Choose specifications to estimate laptop prices.</p>
+            <h2>💻</h2>
+            <h3>Custom Specifications</h3>
+            <p>
+                Choose specifications to estimate laptop prices.
+            </p>
         </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    st.markdown("### Get Started")
-    st.write("Go to Price Prediction from the sidebar to estimate your laptop's price.")
-
-    if st.button("Start Price Prediction"):
-        st.switch_page("app.py")
+        """)
 
 
-# ---------------- PREDICTION PAGE ----------------
+# ---------------- PRICE PREDICTION PAGE ----------------
 
 elif page == "💰 Price Prediction":
 
-    st.markdown('<div class="main-title">Laptop Price Prediction</div>',
-                unsafe_allow_html=True)
+    st.title("💰 Laptop Price Prediction")
 
-    st.markdown(
-        '<p class="subtitle">Enter the laptop specifications below.</p>',
-        unsafe_allow_html=True
-    )
-
-    st.markdown('<div class="section-title">⚙️ Laptop Specifications</div>',
-                unsafe_allow_html=True)
+    st.write("Enter the laptop specifications to estimate its price.")
 
     input_data = {}
 
@@ -233,12 +251,14 @@ elif page == "💰 Price Prediction":
             if col not in numeric_features
         ]
 
-        st.markdown("#### 🔢 Numeric Specifications")
+        st.subheader("Numeric Specifications")
 
         numeric_columns = st.columns(2)
 
         for i, col in enumerate(numeric_features):
+
             with numeric_columns[i % 2]:
+
                 median_value = df[col].median()
 
                 if pd.isna(median_value):
@@ -249,33 +269,35 @@ elif page == "💰 Price Prediction":
                     value=float(median_value)
                 )
 
-        st.markdown("---")
-        st.markdown("#### 🏷️ Laptop Details")
+        st.divider()
+
+        st.subheader("Laptop Details")
 
         categorical_columns = st.columns(2)
 
         for i, col in enumerate(categorical_features):
+
             with categorical_columns[i % 2]:
+
                 options = (
                     df[col]
                     .dropna()
-                    .astype(str)
                     .unique()
                     .tolist()
                 )
 
                 if options:
+
                     input_data[col] = st.selectbox(
                         col.replace("_", " ").title(),
                         options
                     )
-                else:
-                    input_data[col] = st.text_input(
-                        col.replace("_", " ").title(),
-                        value="Unknown"
-                    )
 
-        st.markdown("<br>", unsafe_allow_html=True)
+                else:
+
+                    input_data[col] = st.text_input(
+                        col.replace("_", " ").title()
+                    )
 
         submitted = st.form_submit_button(
             "🚀 Predict Laptop Price",
@@ -283,20 +305,25 @@ elif page == "💰 Price Prediction":
         )
 
     if submitted:
+
         try:
-            input_df = pd.DataFrame([input_data], columns=features)
+
+            input_df = pd.DataFrame(
+                [input_data],
+                columns=features
+            )
+
             prediction = float(model.predict(input_df)[0])
 
-            st.markdown("""
+            st.html(f"""
             <div class="result-card">
                 <h3>✨ Estimated Laptop Price</h3>
+                <div class="result-price">
+                    ₹ {prediction:,.2f}
+                </div>
+                <p>Predicted Laptop Price</p>
             </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown(
-                f'<div class="result-card"><div class="result-price">₹ {prediction:,.2f}</div><p>Predicted Price</p></div>',
-                unsafe_allow_html=True
-            )
+            """)
 
             st.success("Price prediction completed successfully!")
 
@@ -304,57 +331,66 @@ elif page == "💰 Price Prediction":
                 st.dataframe(input_df, use_container_width=True)
 
         except Exception as e:
-            st.error("Prediction failed. Please check the input specifications.")
+
+            st.error("Prediction failed. Please check the specifications.")
             st.code(str(e))
 
 
-# ---------------- DATASET PAGE ----------------
+# ---------------- DATASET OVERVIEW PAGE ----------------
 
 elif page == "📊 Dataset Overview":
 
-    st.markdown('<div class="main-title">Dataset Overview</div>',
-                unsafe_allow_html=True)
+    st.title("📊 Dataset Overview")
 
-    st.markdown(
-        '<p class="subtitle">Explore the laptop dataset used in this project.</p>',
-        unsafe_allow_html=True
-    )
+    st.write("Explore the dataset used for laptop price prediction.")
 
     c1, c2, c3 = st.columns(3)
 
     c1.metric("Total Records", f"{len(df):,}")
     c2.metric("Total Features", len(features))
-    c3.metric("Missing Values", int(df[features].isnull().sum().sum()))
+    c3.metric(
+        "Missing Values",
+        int(df[features].isnull().sum().sum())
+    )
 
-    st.markdown("### Dataset Preview")
-    st.dataframe(df.head(20), use_container_width=True)
+    st.subheader("Dataset Preview")
 
-    st.markdown("### Dataset Statistics")
-    st.dataframe(df[features].describe(), use_container_width=True)
+    st.dataframe(
+        df.head(20),
+        use_container_width=True
+    )
+
+    st.subheader("Dataset Statistics")
+
+    st.dataframe(
+        df[features].describe(),
+        use_container_width=True
+    )
 
     if "price" in df.columns:
-        st.markdown("### Price Distribution")
-        st.bar_chart(df["price"].value_counts().sort_index())
+
+        st.subheader("Price Distribution")
+
+        st.bar_chart(df["price"])
 
 
-# ---------------- ABOUT PAGE ----------------
+# ---------------- ABOUT PROJECT PAGE ----------------
 
 elif page == "ℹ️ About Project":
 
-    st.markdown('<div class="main-title">About This Project</div>',
-                unsafe_allow_html=True)
+    st.title("ℹ️ About This Project")
 
-    st.markdown("""
+    st.html("""
     <div class="hero">
         <h2>💻 Laptop Price Prediction Using Machine Learning</h2>
         <p class="subtitle">
-        This project predicts laptop prices based on their technical
-        specifications using regression algorithms.
+            This project predicts laptop prices based on their
+            technical specifications using regression algorithms.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+    """)
 
-    st.markdown("### Technologies Used")
+    st.subheader("Technologies Used")
 
     st.write("""
     - Python
@@ -364,7 +400,7 @@ elif page == "ℹ️ About Project":
     - Joblib
     """)
 
-    st.markdown("### Machine Learning Models")
+    st.subheader("Machine Learning Algorithms")
 
     st.write("""
     - Linear Regression
@@ -374,7 +410,8 @@ elif page == "ℹ️ About Project":
     - Random Forest Regression
     """)
 
-    st.markdown("### Best Performing Model")
+    st.subheader("Best Performing Model")
+
     st.success(model_name)
 
     st.caption("Academic Machine Learning Project")
