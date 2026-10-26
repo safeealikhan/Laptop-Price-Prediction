@@ -1,7 +1,5 @@
-pip install -r requirements.txtstreamlit
+streamlit
 pandas
 numpy
 scikit-learn
-matplotlib
-seaborn
 joblib
